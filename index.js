@@ -5,7 +5,6 @@ const Alexa = require('alexa-sdk');
 
 const handlers = {
     "LaunchRequest":function(){
-        this.attributes['query'] = '';
         this.response.speak("welcome to search columbus");
         this.emit(':responseReady');
     },
