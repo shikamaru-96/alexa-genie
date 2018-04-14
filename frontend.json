@@ -24,9 +24,10 @@
                         }
                     ],
                     "samples": [
-                        "could you {query}",
-                        "find me a skill that {query}",
-                        "can you {query}"
+                        "search for skill that {query}",
+                        "search for a skill that {query}",
+                        "find me skill that {query}",
+                        "find me a skill that {query}"
                     ]
                 },
                 {
@@ -40,53 +41,17 @@
                     "samples": [
                         "explain more about {number}",
                         "elaborate {number}",
-                        "give me more details of {number}",
-                        "tell me more about {number}"
+                        "give me more details of {number}"
                     ]
                 },
                 {
-                    "name": "AMAZON.MoreIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.NavigateHomeIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.NavigateSettingsIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.NextIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.PageUpIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.PageDownIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.PreviousIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.ScrollRightIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.ScrollDownIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.ScrollLeftIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.ScrollUpIntent",
-                    "samples": []
+                    "name": "helpIntent",
+                    "slots": [],
+                    "samples": [
+                        "tell what can it do",
+                        "for help",
+                        "help"
+                    ]
                 }
             ],
             "types": []
