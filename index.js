@@ -25,8 +25,9 @@ const handlers = {
     },
     "SearchIntent":function(){
         var query = this.event.request.intent.slots.query.value;
+		res = []
         this.response.speak("Ok. Searching for a skill that "+query);
-		connection.query("SELECT name FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+query+"' IN NATURAL LANGUAGE MODE)", function(err, result, fields)
+		connection.query("SELECT * FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+query+"' IN NATURAL LANGUAGE MODE)", function(err, result, fields)
 		{
 		    if(err) throw err;
 		    var li = result.length;
@@ -56,21 +57,12 @@ const handlers = {
     },
     "AskIntent" : function(){
         var query = this.event.request.intent.slots.number.value;
-        if (query>=res.length)
+        if (query>res.length)
             this.response.speak("Sorry nigga");
         else
         {
-            connection.query("SELECT description FROM skills WHERE name IS"+res[query]+";", function(err, result, fields)
-		{
-		    if(err) throw err;
-		    else
-		    {
-		        this.response.speak("Ok. Fetching details about" + query);
-		        this.response.speak(result);
-		    }
-		}
-		);
-            
+		    this.response.speak("Ok. Fetching details about" + query);
+			this.response.speak(res[query-1].description);
         }
         this.emit(":responseReady");
     }
