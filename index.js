@@ -25,44 +25,55 @@ const handlers = {
     },
     "SearchIntent":function(){
         var query = this.event.request.intent.slots.query.value;
-		res = []
+	res = [];
         this.response.speak("Ok. Searching for a skill that "+query);
-		connection.query("SELECT * FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+query+"' IN NATURAL LANGUAGE MODE)", function(err, result, fields)
-		{
-		    if(err) throw err;
-		    var li = result.length;
-		    var cn = 0;
-		    var siz=0;
-		    if(li<3) siz=li;
-		    else siz = 3;
-		    for(var i=0;i<siz;i++)
-		    {
-		        res.push(result[i]);
-		    }
+		
+	connection.query("SELECT * FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+query+"' IN NATURAL LANGUAGE MODE)", function(err, result, fields){
+		if(err) throw err;
+		var li = result.length;
+		var cn = 0;
+		var siz=0;
+		if(li<3) siz=li;
+		else siz = 3;
+		for(var i=0;i<siz;i++){
+			res.push(result[i]);
 		}
-		);
-        if(res.length==3) 
-		    this.response.speak("The results that I found are one, "+res[0]+", two, "+res[1]+", three, "+res[2]+".");
-		else if(res.length==2)
-		    this.response.speak("The results that I found are one, "+res[0]+", two, "+res[1]+".");
-		else if(res.length==1)
-		    this.response.speak("The results that I found are one, "+res[0]+".");
-		else 
-		    this.response.speak("Ma chuda nigga");
-		this.emit(":responseReady");
+		}
+	);
+        if(res.length==3){ 
+		this.response.speak("The results that I found are one, "+res[0]+", two, "+res[1]+", three, "+res[2]+".");
+	}
+	else if(res.length==2){
+		this.response.speak("The results that I found are one, "+res[0]+", two, "+res[1]+".");
+	}
+	else if(res.length==1){
+		this.response.speak("The results that I found are one, "+res[0]+".");
+	}
+	else{ 
+		this.response.speak("Sorry, I do not have any details about that.");
+	}
+	this.emit(":responseReady");
     },
-    "helpIntent": function(){
+    "AMAZON.HelpIntent": function(){
         this.response.speak("Ask me anything that you wish alexa to do. I will check whether it is possible or not and if possible then how")
         this.emit(":responseReady");
     },
+    "AMAZON.StopIntent" : function(){
+        this.response.speak("Ok taking you out of search columbus");
+        this.emit(":responseReady");
+    },
+    "AMAZON.CancelIntent" : function(){
+        this.response.speak("Ok try again");
+        this.emit(":responseReady");
+    },		
     "AskIntent" : function(){
         var query = this.event.request.intent.slots.number.value;
-        if (query>res.length)
-            this.response.speak("Sorry nigga");
-        else
-        {
-		    this.response.speak("Ok. Fetching details about" + query);
-			this.response.speak(res[query-1].description);
+        if (query>res.length){
+            this.response.speak("Please try again").listen();
+	}
+        else{
+            this.response.speak("Ok. Fetching details about" + query);
+	    this.response.speak(res[query-1].description);
         }
         this.emit(":responseReady");
     }
