@@ -2,7 +2,7 @@
 
 const Alexa = require('alexa-sdk');
 var rds_config = require('rds_config');
-var mysql = require('mysql');
+var mysql = require('mysql2');
 var connection = mysql.createConnection({
 	host: rds_config.host,
 	user: rds_config.user,
