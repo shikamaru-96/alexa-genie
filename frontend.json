@@ -5,15 +5,29 @@
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
-                    "samples": []
+                    "samples": [
+                        "forget it",
+                        "never mind",
+                        "cancel"
+                    ]
                 },
                 {
                     "name": "AMAZON.HelpIntent",
-                    "samples": []
+                    "samples": [
+                        "elaborate itself",
+                        "describe itself",
+                        "help me out",
+                        "help"
+                    ]
                 },
                 {
                     "name": "AMAZON.StopIntent",
-                    "samples": []
+                    "samples": [
+                        "turn off",
+                        "shut up",
+                        "off",
+                        "stop"
+                    ]
                 },
                 {
                     "name": "SearchIntent",
@@ -42,15 +56,6 @@
                         "explain more about {number}",
                         "elaborate {number}",
                         "give me more details of {number}"
-                    ]
-                },
-                {
-                    "name": "helpIntent",
-                    "slots": [],
-                    "samples": [
-                        "tell what can it do",
-                        "for help",
-                        "help"
                     ]
                 }
             ],
