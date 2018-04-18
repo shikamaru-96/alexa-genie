@@ -1,4 +1,8 @@
 # alexa-search-columbus
+An alexa skill that can help you find other skills in a more conveinient and simple way. 
 
-## Scrape vaali file upload karde
-## xD
+## Requirements
+* Nodejs
+* Python2.7
+* AWS lambda services
+
