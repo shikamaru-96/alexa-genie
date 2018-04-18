@@ -1,23 +1,51 @@
 "use strict"
 
-const Alexa = require('alexa-sdk');
-var rds_config = require('rds_config');
+var Alexa = require('alexa-sdk');
 var mysql = require('mysql2');
+var storage = require('storage');
+var rds = require('rds_config');
 var connection = mysql.createConnection({
-	host: rds_config.host,
-	user: rds_config.user,
-	password: rds_config.password,
-	database: rds_config.db_name,
+    host     : rds.Host,
+    user     : rds.user,
+    password : rds.password,
+    database : rds.database,
+    debug    : true
 });
-connection.connect(function(err){
-        if(!err) {
-              console.log("Database is connected ... nn");
+var glob = []
+var Query = function(text, q)
+{
+    connection.query("SELECT * FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+text+"' IN NATURAL LANGUAGE MODE)", 
+        function(err, result, fields)
+        {
+            if(err) 
+            {
+                q.response.speak("There was some weird error.. Sorry bruh!\n");
+            }
+            else {
+                var siz = result.length;
+                glob = result;
+                if(siz>=3)
+                {
+                    q.response.speak("The required skills are, 1."+result[0].name+",2. "+result[1].name+",3. "+result[2].name);
+                }
+                else if(siz==2)
+                {
+                    q.response.speak("The required skills are, 1."+result[0].name+",2. "+result[1].name);
+                }
+                else if(siz==1)
+                {
+                    q.response.speak("The required skills are, 1."+result[0].name);
+                }
+                else
+                {
+                    q.response.speak("Sorry nigga, I could not fucking find any skill matching that.")
+                }
+            }
+            q.emit(":responseReady");
         }
-        else {
-              console.log("Error connecting database ... nn");
-        }
-  });
-var res = [];
+    );
+}
+
 const handlers = {
     "LaunchRequest":function(){
         this.response.speak("welcome to search columbus");
@@ -25,37 +53,10 @@ const handlers = {
     },
     "SearchIntent":function(){
         var query = this.event.request.intent.slots.query.value;
-	res = [];
-        this.response.speak("Ok. Searching for a skill that "+query);
-		
-	connection.query("SELECT * FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+query+"' IN NATURAL LANGUAGE MODE)", function(err, result, fields){
-		if(err) throw err;
-		var li = result.length;
-		var cn = 0;
-		var siz=0;
-		if(li<3) siz=li;
-		else siz = 3;
-		for(var i=0;i<siz;i++){
-			res.push(result[i]);
-		}
-		}
-	);
-        if(res.length==3){ 
-		this.response.speak("The results that I found are one, "+res[0]+", two, "+res[1]+", three, "+res[2]+".");
-	}
-	else if(res.length==2){
-		this.response.speak("The results that I found are one, "+res[0]+", two, "+res[1]+".");
-	}
-	else if(res.length==1){
-		this.response.speak("The results that I found are one, "+res[0]+".");
-	}
-	else{ 
-		this.response.speak("Sorry, I do not have any details about that.");
-	}
-	this.emit(":responseReady");
+        Query(query, this);
     },
     "AMAZON.HelpIntent": function(){
-        this.response.speak("Ask me anything that you wish alexa to do. I will check whether it is possible or not and if possible then how")
+        this.response.speak("Ask me anything that you wish alexa to do. I will check whether it is possible or not and if possible then how");
         this.emit(":responseReady");
     },
     "AMAZON.StopIntent" : function(){
@@ -68,19 +69,21 @@ const handlers = {
     },		
     "AskIntent" : function(){
         var query = this.event.request.intent.slots.number.value;
-        if (query>res.length){
-            this.response.speak("Please try again").listen();
-	}
+        if (query>glob.length){
+            this.response.speak("Enter a valid number dude.").listen();
+	    }
         else{
             this.response.speak("Ok. Fetching details about" + query);
-	    this.response.speak(res[query-1].description);
+	        this.response.speak(glob[query-1].description);
         }
         this.emit(":responseReady");
     }
 }
 
-exports.handler = function(event, context, callback){
-  var alexa = Alexa.handler(event, context);
+exports.handler 
+= function(event, context, callback){
+    var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
 };
+
