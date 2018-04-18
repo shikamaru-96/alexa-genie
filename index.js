@@ -2,7 +2,6 @@
 
 var Alexa = require('alexa-sdk');
 var mysql = require('mysql2');
-var storage = require('storage');
 var rds = require('rds_config');
 var connection = mysql.createConnection({
     host     : rds.Host,
@@ -71,17 +70,16 @@ const handlers = {
         var query = this.event.request.intent.slots.number.value;
         if (query>glob.length){
             this.response.speak("Enter a valid number dude.").listen();
-	    }
+	}
         else{
             this.response.speak("Ok. Fetching details about" + query);
-	        this.response.speak(glob[query-1].description);
+	    this.response.speak(glob[query-1].description);
         }
         this.emit(":responseReady");
     }
 }
 
-exports.handler 
-= function(event, context, callback){
+exports.handler = function(event, context, callback){
     var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
