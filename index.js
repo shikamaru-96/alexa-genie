@@ -2,23 +2,25 @@
 
 var Alexa = require('alexa-sdk');
 var mysql = require('mysql2');
-var storage = require('storage');
-var rds = require('rds_config');
 var connection = mysql.createConnection({
-    host     : rds.Host,
-    user     : rds.user,
-    password : rds.password,
-    database : rds.database,
-    debug    : true
+    host     : "",
+    user     : "",
+    password : "",
+    database : "",
+    debug    : true,
+    acquireTimeout: 1000000,
 });
+
 var glob = []
 var Query = function(text, q)
 {
-    connection.query("SELECT * FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+text+"' IN NATURAL LANGUAGE MODE)", 
+    connection.query("SELECT * FROM skills WHERE MATCH (name,invocation,description) AGAINST ('"+text+"' IN NATURAL LANGUAGE MODE)>0", 
         function(err, result, fields)
         {
+            connection.commit();
             if(err) 
             {
+                console.log(err);
                 q.response.speak("There was some weird error.. Sorry bruh!\n");
             }
             else {
@@ -26,19 +28,19 @@ var Query = function(text, q)
                 glob = result;
                 if(siz>=3)
                 {
-                    q.response.speak("The required skills are, 1."+result[0].name+",2. "+result[1].name+",3. "+result[2].name);
+                    q.response.speak("The best matches for your search are, 1,"+result[0].name+",2, "+result[1].name+",3, "+result[2].name);
                 }
                 else if(siz==2)
                 {
-                    q.response.speak("The required skills are, 1."+result[0].name+",2. "+result[1].name);
+                    q.response.speak("The best matches for your search are, 1,"+result[0].name+",2, "+result[1].name);
                 }
                 else if(siz==1)
                 {
-                    q.response.speak("The required skills are, 1."+result[0].name);
+                    q.response.speak("The best match for your search is, 1,"+result[0].name);
                 }
                 else
                 {
-                    q.response.speak("Sorry nigga, I could not fucking find any skill matching that.")
+                    q.response.speak("Sorry man, I could not find any match for that.");
                 }
             }
             q.emit(":responseReady");
@@ -48,7 +50,7 @@ var Query = function(text, q)
 
 const handlers = {
     "LaunchRequest":function(){
-        this.response.speak("welcome to search columbus");
+        this.response.speak("welcome my lord");
         this.emit(':responseReady');
     },
     "SearchIntent":function(){
@@ -60,7 +62,7 @@ const handlers = {
         this.emit(":responseReady");
     },
     "AMAZON.StopIntent" : function(){
-        this.response.speak("Ok taking you out of search columbus");
+        this.response.speak("Exiting my lord");
         this.emit(":responseReady");
     },
     "AMAZON.CancelIntent" : function(){
@@ -73,8 +75,7 @@ const handlers = {
             this.response.speak("Enter a valid number dude.").listen();
 	    }
         else{
-            this.response.speak("Ok. Fetching details about" + query);
-	        this.response.speak(glob[query-1].description);
+            this.response.speak(glob[query-1].description);
         }
         this.emit(":responseReady");
     }
