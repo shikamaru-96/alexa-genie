@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "search columbus",
+            "invocationName": "genie",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
@@ -38,9 +38,14 @@
                         }
                     ],
                     "samples": [
-                        "search for skill that {query}",
-                        "search for a skill that {query}",
-                        "find me skill that {query}",
+                        "fond me a skill that will give {query}",
+                        "find me a skill that can give {query}",
+                        "find me a skill that can perform {query}",
+                        "find me a skill that will do {query}",
+                        "find me a skill that can do {query}",
+                        "find me a skill that will perform {query}",
+                        "search for skill that can {query}",
+                        "search for a skill that will {query}",
                         "find me a skill that {query}"
                     ]
                 },
