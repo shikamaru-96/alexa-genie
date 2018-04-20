@@ -73,16 +73,20 @@ const handlers = {
         var query = this.event.request.intent.slots.number.value;
         if (query>glob.length){
             this.response.speak("Enter a valid number dude.").listen();
-	    }
+	}
         else{
+<<<<<<< HEAD
             this.response.speak(glob[query-1].description);
+=======
+            this.response.speak("Ok. Fetching details about" + query);
+	    this.response.speak(glob[query-1].description);
+>>>>>>> 7669be382c3c33909391846dbbdeb35bb137ba33
         }
         this.emit(":responseReady");
     }
 }
 
-exports.handler 
-= function(event, context, callback){
+exports.handler = function(event, context, callback){
     var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
