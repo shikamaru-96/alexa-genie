@@ -2,21 +2,27 @@
 
 var Alexa = require('alexa-sdk');
 var mysql = require('mysql2');
-var pool = mysql.createPool({
+var pool;
+function pool_init()
+{
+    pool = mysql.createPool(
+    {
         connectionLimit : 100,
-        host     : "",
-        user     : "",
-        password : "",
-        database : "",
+        host     : "alexaskillsdatabase.chyciboy7kcv.us-east-1.rds.amazonaws.com",
+        user     : "anshumaan12",
+        password : "db4anshumaan",
+        database : "alexaskills",
         debug    : true,
         acquireTimeout: 1000000,
-});
-pool.getConnection(
-    function(err, connection) {
-      if (err) throw err;
-      console.log("Connected!");
-    }
-);
+    });
+    pool.getConnection(
+        function(err, connection) {
+          if (err) throw err;
+          console.log("Connected!");
+        }
+    );
+}
+
 var glob = []
 var Query = function(text, q)
 {
@@ -94,10 +100,9 @@ const handlers = {
     }
 }
 
-exports.handler 
-= function(event, context, callback){
+exports.handler = function(event, context, callback){
+    pool_init();
     var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
 };
-

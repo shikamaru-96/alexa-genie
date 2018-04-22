@@ -78,6 +78,7 @@ with open('output.csv', 'w') as f:
                             except:
                                 des = ''
                             if inv is '' and des is '':
+                                print("The category is %s" % names[i])
                                 print("Probably blocked by amazon now..")
                             invokations.append(inv)
                             descriptions.append(des)
