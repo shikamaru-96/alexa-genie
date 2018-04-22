@@ -8,10 +8,10 @@ function pool_init()
     pool = mysql.createPool(
     {
         connectionLimit : 100,
-        host     : "alexaskillsdatabase.chyciboy7kcv.us-east-1.rds.amazonaws.com",
-        user     : "anshumaan12",
-        password : "db4anshumaan",
-        database : "alexaskills",
+        host     : "",
+        user     : "",
+        password : "",
+        database : "",
         debug    : true,
         acquireTimeout: 1000000,
     });
